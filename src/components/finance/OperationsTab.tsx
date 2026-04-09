@@ -45,7 +45,12 @@ export default function OperationsTab() {
   // Use a proper useEffect to only run client-side to avoid hydration errors
   
   useEffect(() => {
-    setIsAdmin(sessionStorage.getItem('finance_role') === 'admin');
+    try {
+      const authData = localStorage.getItem('auth_user');
+      if (authData) {
+        setIsAdmin(JSON.parse(authData).role === 'admin');
+      }
+    } catch(e) {}
   }, []);
 
   const [showForm, setShowForm] = useState(false);

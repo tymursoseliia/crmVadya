@@ -50,7 +50,12 @@ export default function ExpensesTab() {
   const itemsPerPage = 20;
 
   useEffect(() => {
-    setIsAdmin(sessionStorage.getItem("finance_role") === "admin");
+    try {
+      const authData = localStorage.getItem('auth_user');
+      if (authData) {
+        setIsAdmin(JSON.parse(authData).role === 'admin');
+      }
+    } catch(e) {}
   }, []);
 
   // Функция для определения кассы по расходу
