@@ -27,8 +27,15 @@ export default function EmployeesTab() {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    const adminStatus = sessionStorage.getItem('finance_role') === 'admin';
-    setIsAdmin(adminStatus);
+    try {
+      const authData = localStorage.getItem('auth_user');
+      if (authData) {
+        const parsed = JSON.parse(authData);
+        setIsAdmin(parsed.role === 'admin');
+      }
+    } catch(e) {
+      console.error(e);
+    }
   }, []);
 
   const updateTeamleadsData = async () => {
