@@ -163,7 +163,10 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
 
       if (empError) throw empError;
       if (employeesData) {
-        setEmployees(employeesData.map(dbToApp.employee));
+        const activeEmployees = employeesData
+          .map(dbToApp.employee)
+          .filter(e => e.id !== 'valera' && e.id !== 'dyadya');
+        setEmployees(activeEmployees);
       }
 
       // Загружаем операции
