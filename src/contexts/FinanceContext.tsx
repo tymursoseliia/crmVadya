@@ -165,7 +165,7 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
       if (employeesData) {
         const activeEmployees = employeesData
           .map(dbToApp.employee)
-          .filter(e => e.id !== 'valera' && e.id !== 'dyadya');
+          .filter(e => e.id !== 'valera' && e.id !== 'dyadya' && e.id !== 'sportik');
         setEmployees(activeEmployees);
       }
 
