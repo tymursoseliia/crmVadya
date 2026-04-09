@@ -39,7 +39,6 @@ const vadyTeam: Employee[] = [
 const closers: Employee[] = [
   { id: 'vanya', name: 'Ваня', role: 'closer', team: null, salary: 0, percentRastamozhka: 0, percentDobiv: 5, percentProfit: 0, isSpecial: false },
   { id: 'pasha', name: 'Паша', role: 'closer', team: null, salary: 0, percentRastamozhka: 0, percentDobiv: 5, percentProfit: 0, isSpecial: false },
-  { id: 'valera', name: 'Валера', role: 'closer', team: null, salary: 350, percentRastamozhka: 0, percentDobiv: 5, percentProfit: 0, isSpecial: false },
   { id: 'an_225_closer', name: 'АН-225', role: 'closer', team: null, salary: 0, percentRastamozhka: 0, percentDobiv: 0, percentProfit: 0, isSpecial: false },
   { id: 'stone_island_closer', name: 'Stone Island', role: 'closer', team: null, salary: 0, percentRastamozhka: 0, percentDobiv: 0, percentProfit: 0, isSpecial: false },
   { id: 'malish_closer', name: 'Малыш', role: 'closer', team: null, salary: 0, percentRastamozhka: 0, percentDobiv: 0, percentProfit: 0, isSpecial: false },
