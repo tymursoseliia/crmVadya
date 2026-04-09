@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { LayoutDashboard, DollarSign, Receipt, Users, Calculator, BarChart3, Target, Home, Lock } from "lucide-react";
+import { LayoutDashboard, DollarSign, Receipt, Users, Calculator, BarChart3, Target, Home, Lock, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FinanceProvider } from "@/contexts/FinanceContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -31,6 +31,10 @@ const SalaryCalculationTab = dynamic(() => import('@/components/finance/SalaryCa
 });
 
 const ReportsTab = dynamic(() => import('@/components/finance/ReportsTab'), {
+  loading: () => <div className="bg-white rounded-lg shadow p-6">Загрузка...</div>
+});
+
+const ChannelsTab = dynamic(() => import('@/components/finance/ChannelsTab'), {
   loading: () => <div className="bg-white rounded-lg shadow p-6">Загрузка...</div>
 });
 
@@ -102,6 +106,14 @@ function FinancesContent() {
                 </TabsTrigger>
 
                 <TabsTrigger
+                  value="channels"
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md gap-2"
+                >
+                  <Send className="w-4 h-4" />
+                  <span>Каналы</span>
+                </TabsTrigger>
+
+                <TabsTrigger
                   value="employees"
                   className="inline-flex items-center justify-center whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-indigo-500 data-[state=active]:text-white data-[state=active]:shadow-md gap-2"
                 >
@@ -158,6 +170,10 @@ function FinancesContent() {
 
           <TabsContent value="expenses">
             <ExpensesTab />
+          </TabsContent>
+
+          <TabsContent value="channels">
+            <ChannelsTab />
           </TabsContent>
 
           <TabsContent value="employees">

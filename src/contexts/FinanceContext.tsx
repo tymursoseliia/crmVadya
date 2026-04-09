@@ -510,11 +510,12 @@ export function FinanceProvider({ children }: { children: ReactNode }) {
       if (existing) {
         return {
           ...initial,
-          salary: existing.salary !== 350 && existing.salary !== initial.salary ? existing.salary : initial.salary,
-          percentRastamozhka: existing.percentRastamozhka !== initial.percentRastamozhka ? existing.percentRastamozhka : initial.percentRastamozhka,
-          percentDobiv: existing.percentDobiv !== initial.percentDobiv ? existing.percentDobiv : initial.percentDobiv,
-          percentProfit: existing.percentProfit !== initial.percentProfit ? existing.percentProfit : initial.percentProfit,
-          fixedPay: existing.fixedPay !== initial.fixedPay ? existing.fixedPay : initial.fixedPay,
+          // Оверрайдим значения всегда из кода, чтобы можно было откатывать (в т.ч. тех, кого вернули на 350)
+          salary: initial.salary,
+          percentRastamozhka: initial.percentRastamozhka,
+          percentDobiv: initial.percentDobiv,
+          percentProfit: initial.percentProfit,
+          fixedPay: initial.fixedPay,
         };
       }
       return initial;

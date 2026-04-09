@@ -9,7 +9,7 @@ export const initialDrops: Drop[] = [
 
 // Команда Вади
 const vadyTeam: Employee[] = [
-  { id: 'philipp_plein', name: 'Philipp Plein', role: 'manager', team: 'vady', salary: 350, percentRastamozhka: 15, percentDobiv: 10, percentProfit: 0, isSpecial: false },
+  { id: 'philipp_plein', name: 'Philipp Plein', role: 'manager', team: 'vady', salary: 500, percentRastamozhka: 15, percentDobiv: 10, percentProfit: 0, isSpecial: false },
   { id: 'kolomoyskiy', name: 'Коломойский', role: 'manager', team: 'vady', salary: 350, percentRastamozhka: 15, percentDobiv: 10, percentProfit: 0, isSpecial: false },
   { id: 'an_225', name: 'АН-225', role: 'manager', team: 'vady', salary: 350, percentRastamozhka: 15, percentDobiv: 10, percentProfit: 0, isSpecial: false },
   { id: 'matros', name: 'Матрос', role: 'manager', team: 'vady', salary: 350, percentRastamozhka: 15, percentDobiv: 10, percentProfit: 0, isSpecial: false },
@@ -21,15 +21,16 @@ const vadyTeam: Employee[] = [
   { id: 'ceo', name: 'CEO', role: 'manager', team: 'vady', salary: 350, percentRastamozhka: 15, percentDobiv: 10, percentProfit: 0, isSpecial: false },
   { id: 'malish', name: 'Малыш', role: 'manager', team: 'vady', salary: 350, percentRastamozhka: 15, percentDobiv: 10, percentProfit: 0, isSpecial: false },
   { id: 'lada', name: 'LADA', role: 'manager', team: 'vady', salary: 350, percentRastamozhka: 15, percentDobiv: 10, percentProfit: 0, isSpecial: false },
-  { id: 'piton', name: 'Питон', role: 'manager', team: 'vady', salary: 350, percentRastamozhka: 15, percentDobiv: 10, percentProfit: 0, isSpecial: false },
+  { id: 'piton', name: 'Питон', role: 'manager', team: 'vady', salary: 500, percentRastamozhka: 15, percentDobiv: 10, percentProfit: 0, isSpecial: false },
   { id: 'adidas', name: 'Adidas', role: 'manager', team: 'vady', salary: 350, percentRastamozhka: 15, percentDobiv: 10, percentProfit: 0, isSpecial: false },
-  { id: 'exel', name: 'EXEL', role: 'manager', team: 'vady', salary: 350, percentRastamozhka: 15, percentDobiv: 10, percentProfit: 0, isSpecial: false },
+  { id: 'exel', name: 'EXEL', role: 'manager', team: 'vady', salary: 500, percentRastamozhka: 15, percentDobiv: 10, percentProfit: 0, isSpecial: false },
   { id: 'valeryana', name: 'Валерьяна', role: 'manager', team: 'vady', salary: 350, percentRastamozhka: 15, percentDobiv: 10, percentProfit: 0, isSpecial: false },
   { id: 'stone_island', name: 'Stone Island', role: 'manager', team: 'vady', salary: 350, percentRastamozhka: 15, percentDobiv: 10, percentProfit: 0, isSpecial: false },
   { id: 'cp_company', name: 'C.P Company', role: 'manager', team: 'vady', salary: 350, percentRastamozhka: 15, percentDobiv: 10, percentProfit: 0, isSpecial: false },
   { id: 'ufc', name: 'UFC', role: 'manager', team: 'vady', salary: 350, percentRastamozhka: 15, percentDobiv: 10, percentProfit: 0, isSpecial: false },
   { id: 'tyazhik', name: 'Тяжик', role: 'manager', team: 'vady', salary: 350, percentRastamozhka: 15, percentDobiv: 10, percentProfit: 0, isSpecial: false },
   { id: 'borchik', name: 'Борчик', role: 'manager', team: 'vady', salary: 350, percentRastamozhka: 15, percentDobiv: 10, percentProfit: 0, isSpecial: false },
+  { id: 'sportik', name: 'Спортик', role: 'manager', team: 'vady', salary: 1000, percentRastamozhka: 15, percentDobiv: 10, percentProfit: 0, isSpecial: false },
 ];
 
 
@@ -39,6 +40,10 @@ const closers: Employee[] = [
   { id: 'vanya', name: 'Ваня', role: 'closer', team: null, salary: 0, percentRastamozhka: 0, percentDobiv: 5, percentProfit: 0, isSpecial: false },
   { id: 'pasha', name: 'Паша', role: 'closer', team: null, salary: 0, percentRastamozhka: 0, percentDobiv: 5, percentProfit: 0, isSpecial: false },
   { id: 'valera', name: 'Валера', role: 'closer', team: null, salary: 350, percentRastamozhka: 0, percentDobiv: 5, percentProfit: 0, isSpecial: false },
+  { id: 'an_225_closer', name: 'АН-225', role: 'closer', team: null, salary: 0, percentRastamozhka: 0, percentDobiv: 0, percentProfit: 0, isSpecial: false },
+  { id: 'stone_island_closer', name: 'Stone Island', role: 'closer', team: null, salary: 0, percentRastamozhka: 0, percentDobiv: 0, percentProfit: 0, isSpecial: false },
+  { id: 'malish_closer', name: 'Малыш', role: 'closer', team: null, salary: 0, percentRastamozhka: 0, percentDobiv: 0, percentProfit: 0, isSpecial: false },
+  { id: 'dyadya_closer', name: 'Дядя', role: 'closer', team: null, salary: 0, percentRastamozhka: 0, percentDobiv: 0, percentProfit: 0, isSpecial: false },
 ];
 
 // IT отдел
@@ -79,6 +84,22 @@ export const initialExpenseCategories: ExpenseCategory[] = [
   { id: 'cat-tech', name: 'Тех. расходы', type: 'tech' },
   { id: 'cat-telephony', name: 'Телефония', type: 'common' },
   { id: 'cat-office', name: 'Офисные расходы', type: 'common' },
+  
+  // Telegram Channels
+  { id: 'cat-chan-autoprigon024', name: 't.me/autoprigon024', type: 'personal' },
+  { id: 'cat-chan-PapaEuroCar', name: 't.me/PapaEuroCar', type: 'personal' },
+  { id: 'cat-chan-AutoSelection_EU', name: 't.me/AutoSelection_EU', type: 'personal' },
+  { id: 'cat-chan-WestToDrive', name: 't.me/WestToDrive', type: 'personal' },
+  { id: 'cat-chan-Way_Home_RU', name: 't.me/Way_Home_RU', type: 'personal' },
+  { id: 'cat-chan-PodZakazLab', name: 't.me/PodZakazLab', type: 'personal' },
+  { id: 'cat-chan-Europa_Motors', name: 't.me/Europa_Motors', type: 'personal' },
+  { id: 'cat-chan-FastCarDelivery01', name: 't.me/FastCarDelivery01', type: 'personal' },
+  { id: 'cat-chan-Car_Import_RU01', name: 't.me/Car_Import_RU01', type: 'personal' },
+  { id: 'cat-chan-GrandImport', name: 't.me/GrandImport', type: 'personal' },
+  { id: 'cat-chan-Euro_avto_tut', name: 't.me/Euro_avto_tut', type: 'personal' },
+  { id: 'cat-chan-Prigon_EU_AUTO', name: 't.me/Prigon_EU_AUTO', type: 'personal' },
+  { id: 'cat-chan-Auto_ImportFromEU', name: 't.me/Auto_ImportFromEU', type: 'personal' },
+  { id: 'cat-chan-Auto_euro_zdes', name: 't.me/Auto_euro_zdes', type: 'personal' },
 ];
 
 // Расчет общей ЗП IT отдела
