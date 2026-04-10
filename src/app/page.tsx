@@ -22,20 +22,26 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 flex flex-col">
+    <div 
+      className="min-h-screen flex flex-col relative bg-black bg-cover bg-center bg-no-repeat overflow-hidden" 
+      style={{ backgroundImage: 'url("/gta-bg.jpg")' }}
+    >
+      {/* Dark overlay for readability */}
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
+
       {/* Header */}
-      <header className="border-b border-amber-200 bg-white shadow-sm">
+      <header className="relative z-10 border-b border-white/20 bg-black/30 backdrop-blur-md shadow-2xl">
         <div className="max-w-4xl mx-auto px-4 py-6">
           <div className="flex items-center justify-center gap-4">
-            <Crown className="w-12 h-12 text-amber-500" />
+            <Crown className="w-12 h-12 text-pink-500 drop-shadow-[0_0_15px_rgba(236,72,153,0.8)]" />
             <div className="text-center">
-              <h1 className="text-4xl font-black tracking-tight">
-                <span className="text-gray-800">Обманщики</span>
+              <h1 className="text-5xl font-black tracking-tight text-white uppercase" style={{ WebkitTextStroke: '2px black', textShadow: '4px 4px 0px rgba(0,0,0,0.8)' }}>
+                <span>Обманщики</span>
               </h1>
             </div>
-            <Crown className="w-12 h-12 text-amber-500" />
+            <Crown className="w-12 h-12 text-pink-500 drop-shadow-[0_0_15px_rgba(236,72,153,0.8)]" />
             <div className="ml-8">
-              <Button variant="ghost" className="text-gray-500 hover:text-red-500" onClick={logout}>
+              <Button variant="ghost" className="text-white hover:text-red-400 hover:bg-white/10" onClick={logout}>
                 <LogOut className="w-5 h-5 mr-2" />
                 Выйти
               </Button>
@@ -45,41 +51,41 @@ export default function Home() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-5xl mx-auto px-4 py-24 flex-1 flex flex-col items-center justify-center">
-        <div className="text-center mb-12">
-          <h2 className="text-2xl font-bold text-gray-800 mb-3">
+      <main className="relative z-10 max-w-5xl mx-auto px-4 py-24 flex-1 flex flex-col items-center justify-center">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl font-black text-white uppercase tracking-widest drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] bg-black/50 px-8 py-3 rounded-xl border border-white/10 backdrop-blur-sm">
             Выберите раздел
           </h2>
         </div>
 
         {/* Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full max-w-xl">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-8 w-full max-w-2xl">
           <Button
             variant="outline"
             size="lg"
             onClick={() => router.push("/crm")}
-            className="w-full sm:w-auto h-24 text-xl border-purple-400 text-purple-600 hover:bg-purple-50 hover:text-purple-700 hover:border-purple-500 gap-3"
+            className="w-full sm:w-64 h-32 text-2xl font-black uppercase text-white bg-gradient-to-br from-pink-500/80 to-purple-600/80 hover:from-pink-500 hover:to-purple-600 border-2 border-pink-300/50 shadow-[0_0_30px_rgba(236,72,153,0.5)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_50px_rgba(236,72,153,0.8)] gap-4 backdrop-blur-sm rounded-2xl"
           >
-            <Users className="w-8 h-8" />
+            <Users className="w-10 h-10" />
             CRM
           </Button>
           <Button
             variant="outline"
             size="lg"
             onClick={() => router.push("/finances")}
-            className="w-full sm:w-auto h-24 text-xl border-green-500 text-green-600 hover:bg-green-50 hover:text-green-700 hover:border-green-600 gap-3"
+            className="w-full sm:w-64 h-32 text-2xl font-black uppercase text-white bg-gradient-to-br from-emerald-500/80 to-teal-600/80 hover:from-emerald-500 hover:to-teal-600 border-2 border-emerald-300/50 shadow-[0_0_30px_rgba(16,185,129,0.5)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_50px_rgba(16,185,129,0.8)] gap-4 backdrop-blur-sm rounded-2xl"
           >
-            <DollarSign className="w-8 h-8" />
+            <DollarSign className="w-10 h-10" />
             Финансы
           </Button>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 bg-white mt-auto">
+      <footer className="relative z-10 mt-auto border-t border-white/20 bg-black/50 backdrop-blur-md">
         <div className="max-w-4xl mx-auto px-4 py-6 text-center">
-          <div className="flex items-center justify-center gap-2 text-gray-500">
-            <span className="font-medium">Обманщики</span>
+          <div className="flex items-center justify-center gap-2 text-white/50">
+            <span className="font-bold tracking-widest uppercase text-sm">Обманщики</span>
           </div>
         </div>
       </footer>
