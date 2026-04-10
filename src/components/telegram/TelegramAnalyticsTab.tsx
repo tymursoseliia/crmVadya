@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { MessageSquare, RefreshCw, Download, X, Check, Plus, Calendar as CalendarIcon, ChevronDown, Lock } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useFinance } from "@/contexts/FinanceContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface DailyLeads {
   managerId: string;
@@ -27,6 +28,7 @@ interface TelegramPeriod {
 
 export default function TelegramAnalyticsTab() {
   const { employees = [], isLoaded: employeesLoaded = false } = useFinance();
+  const { user } = useAuth();
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [historyData, setHistoryData] = useState<Record<string, DailyLeads[]>>({});
@@ -384,6 +386,12 @@ export default function TelegramAnalyticsTab() {
   };
 
   const startEdit = (managerId: string, date: string) => {
+    const isAdmin = user?.role === 'admin';
+    if (!isAdmin && user?.id !== managerId) {
+      alert("❌ Вы можете редактировать только свои лиды!");
+      return;
+    }
+
     const value = getCellValue(managerId, date);
     setEditingCell({ managerId, date });
     setEditValue(value.toString());
