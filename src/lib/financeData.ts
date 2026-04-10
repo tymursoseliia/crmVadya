@@ -54,6 +54,7 @@ const specialRoles: Employee[] = [
   { id: 'philipp_plein_special', name: 'Philipp Plein (ОП)', role: 'special', team: null, salary: 500, percentRastamozhka: 0, percentDobiv: 0, percentProfit: 0, isSpecial: true },
   { id: 'piton_special', name: 'Питон (ОП)', role: 'special', team: null, salary: 500, percentRastamozhka: 0, percentDobiv: 0, percentProfit: 0, isSpecial: true },
   { id: 'exel_special', name: 'EXEL (ОП)', role: 'special', team: null, salary: 500, percentRastamozhka: 0, percentDobiv: 0, percentProfit: 0, isSpecial: true },
+  { id: 'ceo_special', name: 'CEO (ОП)', role: 'special', team: null, salary: 500, percentRastamozhka: 0, percentDobiv: 0, percentProfit: 0, isSpecial: true },
   { id: 'sportik_special', name: 'Спортик', role: 'special', team: null, salary: 1000, percentRastamozhka: 0, percentDobiv: 0, percentProfit: 0, isSpecial: true },
 ];
 
