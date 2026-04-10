@@ -38,6 +38,8 @@ export default function OperationsTab() {
     managerId: '',
     closerId: '',
     comment: '',
+    managerPercent: '',
+    closerPercent: '',
   });
 
   const [isAdmin, setIsAdmin] = useState(false);
@@ -192,6 +194,13 @@ export default function OperationsTab() {
     // Заполняем форму данными операции
     setEditingOperation(operation);
 
+    const calcManagerPct = operation.usdtAfterCommission > 0
+      ? (operation.managerEarning / operation.usdtAfterCommission) * 100
+      : 0;
+    const calcCloserPct = operation.usdtAfterCommission > 0 && operation.closerEarning
+      ? (operation.closerEarning / operation.usdtAfterCommission) * 100
+      : 0;
+
     setFormData({
       date: operation.date,
       sumRub: operation.sumRub.toString(),
@@ -201,6 +210,8 @@ export default function OperationsTab() {
       managerId: operation.managerId,
       closerId: operation.closerId || '',
       comment: operation.comment || '',
+      managerPercent: calcManagerPct ? parseFloat(calcManagerPct.toFixed(2)).toString() : '',
+      closerPercent: calcCloserPct ? parseFloat(calcCloserPct.toFixed(2)).toString() : '',
     });
 
     setShowForm(true);
@@ -260,17 +271,21 @@ export default function OperationsTab() {
       exchangeRate
     );
 
-    const managerEarning = calculateManagerEarning(
-      usdtAfterCommission,
-      manager,
-      formData.type
-    );
+    let finalManagerPercent = parseFloat(formData.managerPercent);
+    if (isNaN(finalManagerPercent)) {
+      finalManagerPercent = formData.type === 'растаможка' ? manager.percentRastamozhka : manager.percentDobiv;
+    }
+    const managerEarning = usdtAfterCommission * (finalManagerPercent / 100);
 
     let closerEarning = 0;
     if (formData.type === 'добив' && formData.closerId) {
       const closer = employees.find(e => e.id === formData.closerId);
       if (closer) {
-        closerEarning = calculateCloserEarning(usdtAfterCommission, closer);
+        let finalCloserPercent = parseFloat(formData.closerPercent);
+        if (isNaN(finalCloserPercent)) {
+          finalCloserPercent = closer.role === 'manager' ? 5 : closer.percentDobiv;
+        }
+        closerEarning = usdtAfterCommission * (finalCloserPercent / 100);
       }
     }
 
@@ -326,6 +341,8 @@ export default function OperationsTab() {
       managerId: '',
       closerId: '',
       comment: '',
+      managerPercent: '',
+      closerPercent: '',
     });
 
     setShowForm(false);
@@ -672,7 +689,17 @@ export default function OperationsTab() {
                         id="type"
                         className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         value={formData.type}
-                        onChange={(e) => setFormData({ ...formData, type: e.target.value as OperationType })}
+                        onChange={(e) => {
+                          const newType = e.target.value as OperationType;
+                          const emp = employees.find(m => m.id === formData.managerId);
+                          const defPct = emp ? (newType === 'растаможка' ? emp.percentRastamozhka : emp.percentDobiv) : formData.managerPercent;
+                          setFormData({ 
+                            ...formData, 
+                            type: newType, 
+                            managerPercent: defPct.toString(),
+                            closerPercent: newType === 'растаможка' ? '' : formData.closerPercent 
+                          });
+                        }}
                         required
                       >
                         <option value="растаможка">Растаможка</option>
@@ -726,50 +753,91 @@ export default function OperationsTab() {
                       </div>
                     </div>
 
-                    <div>
-                      <Label htmlFor="managerId" className="text-xs">Менеджер *</Label>
-                      <select
-                        id="managerId"
-                        className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        value={formData.managerId}
-                        onChange={(e) => setFormData({ ...formData, managerId: e.target.value })}
-                        required
-                      >
-                        <option value="">Выберите</option>
-                        {managers.map(manager => (
-                          <option key={manager.id} value={manager.id}>
-                            {manager.name}
-                          </option>
-                        ))}
-                      </select>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <Label htmlFor="managerId" className="text-xs">Менеджер *</Label>
+                        <select
+                          id="managerId"
+                          className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          value={formData.managerId}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            const emp = employees.find(m => m.id === val);
+                            const defPct = emp ? (formData.type === 'растаможка' ? emp.percentRastamozhka : emp.percentDobiv) : '';
+                            setFormData({ ...formData, managerId: val, managerPercent: defPct.toString() });
+                          }}
+                          required
+                        >
+                          <option value="">Выберите</option>
+                          {managers.map(manager => (
+                            <option key={manager.id} value={manager.id}>
+                              {manager.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                         <Label htmlFor="managerPercent" className="text-xs">Менеджер %</Label>
+                         <Input
+                           id="managerPercent"
+                           type="number"
+                           step="0.01"
+                           placeholder="По умолч."
+                           value={formData.managerPercent}
+                           onChange={(e) => setFormData({ ...formData, managerPercent: e.target.value })}
+                           className="mt-1"
+                         />
+                      </div>
                     </div>
 
                     {formData.type === 'добив' && (
-                      <div>
-                        <Label htmlFor="closerId" className="text-xs">Кто добил *</Label>
-                        <select
-                          id="closerId"
-                          className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          value={formData.closerId}
-                          onChange={(e) => setFormData({ ...formData, closerId: e.target.value })}
-                          required={formData.type === 'добив'}
-                        >
-                          <option value="">Выберите</option>
-                          <optgroup label="Клоузеры">
-                            {closersAndManagers.filter(e => e.role === 'closer').map(closer => (
-                              <option key={closer.id} value={closer.id}>
-                                {closer.name}
-                              </option>
-                            ))}
-                          </optgroup>
-                          <optgroup label="Менеджеры">
-                            {closersAndManagers.filter(e => e.role === 'manager').map(manager => (
-                              <option key={manager.id} value={manager.id}>
-                                {manager.name}
-                              </option>
-                            ))}
-                          </optgroup>
-                        </select>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <Label htmlFor="closerId" className="text-xs">Кто добил *</Label>
+                          <select
+                            id="closerId"
+                            className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            value={formData.closerId}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              const emp = employees.find(m => m.id === val);
+                              let defPct = '';
+                              if (emp) {
+                                defPct = (emp.role === 'manager' ? '5' : emp.percentDobiv.toString());
+                              }
+                              setFormData({ ...formData, closerId: val, closerPercent: defPct });
+                            }}
+                            required={formData.type === 'добив'}
+                          >
+                            <option value="">Выберите</option>
+                            <optgroup label="Клоузеры">
+                              {closersAndManagers.filter(e => e.role === 'closer').map(closer => (
+                                <option key={closer.id} value={closer.id}>
+                                  {closer.name}
+                                </option>
+                              ))}
+                            </optgroup>
+                            <optgroup label="Менеджеры">
+                              {closersAndManagers.filter(e => e.role === 'manager').map(manager => (
+                                <option key={manager.id} value={manager.id}>
+                                  {manager.name}
+                                </option>
+                              ))}
+                            </optgroup>
+                          </select>
+                        </div>
+                        <div>
+                           <Label htmlFor="closerPercent" className="text-xs">Кто добил %</Label>
+                           <Input
+                             id="closerPercent"
+                             type="number"
+                             step="0.01"
+                             placeholder="По умолч."
+                             value={formData.closerPercent}
+                             onChange={(e) => setFormData({ ...formData, closerPercent: e.target.value })}
+                             className="mt-1"
+                           />
+                        </div>
                       </div>
                     )}
 
