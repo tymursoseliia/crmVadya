@@ -147,8 +147,6 @@ export const calculateEmployeeSalary = (
     finalSalary = Math.max(finalSalary, employee.salary);
   }
 
-  finalSalary = Math.round(finalSalary / 50) * 50;
-
   return {
     employeeId: employee.id,
     periodId: '',
