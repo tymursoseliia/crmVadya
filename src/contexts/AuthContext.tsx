@@ -10,7 +10,7 @@ export type AuthUser =
 
 interface AuthContextType {
   user: AuthUser | null;
-  loginEmployee: (password: string) => Promise<{ success: boolean; error?: string }>;
+  loginEmployee: (name: string, password: string) => Promise<{ success: boolean; error?: string }>;
   loginAdmin: (password: string) => boolean;
   logout: () => void;
   isLoading: boolean;
@@ -35,7 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(false);
   }, []);
 
-  const loginEmployee = async (password: string) => {
+  const loginEmployee = async (name: string, password: string) => {
     try {
       if (!supabase) {
         return { success: false, error: "База данных недоступна" };
@@ -44,11 +44,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { data, error } = await supabase
         .from('employees')
         .select('*')
+        .eq('name', name)
         .eq('password', password)
         .single();
         
       if (error || !data) {
-        return { success: false, error: "Неверный пароль" };
+        return { success: false, error: "Неверный логин или пароль" };
       }
       
       const employee = dbToApp.employee(data);

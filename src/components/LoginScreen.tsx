@@ -34,6 +34,10 @@ export default function LoginScreen() {
 
   const handleEmployeeLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!selectedEmployeeName) {
+      setError("Выберите сотрудника из списка");
+      return;
+    }
     if (!password) {
       setError("Введите пароль");
       return;
@@ -41,9 +45,7 @@ export default function LoginScreen() {
     setError("");
     setIsLoading(true);
     
-    // В текущей реализации мы передаем только пароль. 
-    // Поскольку пароли уникальны, контекст авторизации найдет сотрудника по паролю.
-    const res = await loginEmployee(password);
+    const res = await loginEmployee(selectedEmployeeName, password);
     if (!res.success) {
       setError(res.error || "Ошибка входа");
       setIsLoading(false);
@@ -100,7 +102,21 @@ export default function LoginScreen() {
 
         <CardContent className="pb-8">
           {activeTab === 'employee' ? (
-            <form onSubmit={handleEmployeeLogin} className="space-y-5">
+            <form onSubmit={handleEmployeeLogin} className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Имя сотрудника</label>
+                <Select value={selectedEmployeeName} onValueChange={(val) => { setSelectedEmployeeName(val); setError(""); }}>
+                  <SelectTrigger className="h-12 w-full text-base">
+                    <SelectValue placeholder="Выберите своё имя" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {employees.map(emp => (
+                      <SelectItem key={emp.id} value={emp.name}>{emp.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700" htmlFor="emp-password">Пароль сотрудника</label>
                 <div className="relative">
