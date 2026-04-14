@@ -17,9 +17,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Обманщики",
   description: "Внутренняя система",
-  icons: {
-    icon: "/favicon.svg",
-  },
 };
 
 export default function RootLayout({
