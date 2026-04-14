@@ -52,11 +52,6 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="relative z-10 max-w-5xl mx-auto px-4 py-24 flex-1 flex flex-col items-center justify-center">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl font-black text-white uppercase tracking-widest drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] bg-black/50 px-8 py-3 rounded-xl border border-white/10 backdrop-blur-sm">
-            Выберите раздел
-          </h2>
-        </div>
 
         {/* Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-8 w-full max-w-2xl">
