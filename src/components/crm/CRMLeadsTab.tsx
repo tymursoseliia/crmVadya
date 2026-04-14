@@ -83,7 +83,12 @@ export default function CRMLeadsTab() {
     stage: 'contract_done' as LeadStage,
     serviceType: 'rastamozhka' as ServiceType,
     managerId: '',
-    amount: '',
+    amountCustoms: '',
+    amountCar: '',
+    amountRecycling: '',
+    amountFee: '',
+    amountDeposit: '',
+    amountOther: '',
     notes: ''
   });
 
@@ -190,10 +195,21 @@ export default function CRMLeadsTab() {
       return;
     }
 
-    // Сумма обязательна для всех статусов кроме "Договор сделан"
-    const needsAmount = formData.stage !== 'contract_done';
-    if (needsAmount && !formData.amount) {
-      alert('Введите сумму оплаты');
+    // Суммы оплаты (можно указать любую или несколько для расчетов)
+    const numAmountCustoms = formData.amountCustoms ? Number(formData.amountCustoms) : undefined;
+    const numAmountCar = formData.amountCar ? Number(formData.amountCar) : undefined;
+    const numAmountRecycling = formData.amountRecycling ? Number(formData.amountRecycling) : undefined;
+    const numAmountFee = formData.amountFee ? Number(formData.amountFee) : undefined;
+    const numAmountDeposit = formData.amountDeposit ? Number(formData.amountDeposit) : undefined;
+    const numAmountOther = formData.amountOther ? Number(formData.amountOther) : undefined;
+
+    const totalAmount = (numAmountCustoms || 0) + (numAmountCar || 0) + 
+                        (numAmountRecycling || 0) + (numAmountFee || 0) + 
+                        (numAmountDeposit || 0) + (numAmountOther || 0);
+
+    const needsAmount = formData.stage !== 'contract_done' && formData.stage !== 'gave_requisites';
+    if (needsAmount && totalAmount === 0) {
+      alert('Заполните хотя бы одну сумму оплаты');
       return;
     }
 
@@ -211,7 +227,13 @@ export default function CRMLeadsTab() {
       serviceType: 'rastamozhka', // По умолчанию растаможка
       managerId: finalManagerId,
       teamId: teamId,
-      amount: needsAmount && formData.amount ? Number(formData.amount) : undefined,
+      amount: totalAmount > 0 ? totalAmount : undefined,
+      amountCustoms: numAmountCustoms,
+      amountCar: numAmountCar,
+      amountRecycling: numAmountRecycling,
+      amountFee: numAmountFee,
+      amountDeposit: numAmountDeposit,
+      amountOther: numAmountOther,
       createdBy: editingLead?.createdBy || 'Пользователь',
       createdAt: editingLead?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -242,7 +264,12 @@ export default function CRMLeadsTab() {
       stage: 'contract_done',
       serviceType: 'rastamozhka',
       managerId: user?.role === 'employee' ? user.id : '',
-      amount: '',
+      amountCustoms: '',
+      amountCar: '',
+      amountRecycling: '',
+      amountFee: '',
+      amountDeposit: '',
+      amountOther: '',
       notes: ''
     });
     setShowForm(false);
@@ -258,7 +285,12 @@ export default function CRMLeadsTab() {
       stage: lead.stage,
       serviceType: lead.serviceType,
       managerId: lead.managerId || '',
-      amount: lead.amount?.toString() || '',
+      amountCustoms: lead.amountCustoms?.toString() || '',
+      amountCar: lead.amountCar?.toString() || '',
+      amountRecycling: lead.amountRecycling?.toString() || '',
+      amountFee: lead.amountFee?.toString() || '',
+      amountDeposit: lead.amountDeposit?.toString() || '',
+      amountOther: lead.amountOther?.toString() || '',
       notes: lead.notes || ''
     });
     setShowForm(true);
@@ -742,15 +774,23 @@ export default function CRMLeadsTab() {
 
                     {/* Сумма - крупно и выделенно (только для этапов оплаты) */}
                     {lead.amount && !['contract_done', 'gave_requisites'].includes(lead.stage) ? (
-                      <div className="flex-shrink-0 text-right bg-gradient-to-r from-green-50 to-emerald-50 px-4 py-2 rounded-lg border border-green-200">
-                        <div className="text-xs text-green-600 font-medium mb-1">Сумма</div>
+                      <div className="flex-shrink-0 text-right bg-gradient-to-r from-green-50 to-emerald-50 px-4 py-2 rounded-lg border border-green-200 min-w-[200px]">
+                        <div className="text-xs text-green-600 font-medium mb-1">Общая сумма</div>
                         <div className="text-xl font-bold text-green-700">
                           {lead.amount.toLocaleString('ru-RU')} ₽
+                        </div>
+                        <div className="mt-2 pt-2 border-t border-green-200/50 flex flex-wrap gap-x-3 gap-y-1 justify-end text-[10px] text-green-700 font-medium max-w-[250px]">
+                          {lead.amountCustoms ? <span>Таможня: {lead.amountCustoms.toLocaleString('ru-RU')}₽</span> : null}
+                          {lead.amountCar ? <span>Авто: {lead.amountCar.toLocaleString('ru-RU')}₽</span> : null}
+                          {lead.amountRecycling ? <span>Утиль: {lead.amountRecycling.toLocaleString('ru-RU')}₽</span> : null}
+                          {lead.amountFee ? <span>Пошлина: {lead.amountFee.toLocaleString('ru-RU')}₽</span> : null}
+                          {lead.amountDeposit ? <span>Залог: {lead.amountDeposit.toLocaleString('ru-RU')}₽</span> : null}
+                          {lead.amountOther ? <span>Прочее: {lead.amountOther.toLocaleString('ru-RU')}₽</span> : null}
                         </div>
                       </div>
                     ) : !['contract_done', 'gave_requisites'].includes(lead.stage) ? (
                       <div className="flex-shrink-0 text-right bg-gray-50 px-4 py-2 rounded-lg border border-gray-200">
-                        <div className="text-xs text-gray-500 font-medium mb-1">Сумма</div>
+                        <div className="text-xs text-gray-500 font-medium mb-1">Общая сумма</div>
                         <div className="text-sm text-gray-400">Не указана</div>
                       </div>
                     ) : null}
@@ -798,7 +838,12 @@ export default function CRMLeadsTab() {
             stage: 'contract_done',
             serviceType: 'rastamozhka',
             managerId: user?.role === 'employee' ? user.id : '',
-            amount: '',
+            amountCustoms: '',
+            amountCar: '',
+            amountRecycling: '',
+            amountFee: '',
+            amountDeposit: '',
+            amountOther: '',
             notes: ''
           });
         }
@@ -949,21 +994,50 @@ export default function CRMLeadsTab() {
 
             {/* Сумма оплаты - показываем для всех статусов кроме "Договор сделан" */}
             {formData.stage !== 'contract_done' && (
-              <div className="space-y-2">
-                <Label htmlFor="amount" className="text-sm font-semibold flex items-center gap-2">
-                  <CircleDollarSign className="w-4 h-4" />
-                  Сумма оплаты (₽) <span className="text-red-500">*</span>
+              <div className="space-y-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                <Label className="text-sm font-semibold flex items-center gap-2 mb-2">
+                  <CircleDollarSign className="w-4 h-4 text-purple-600" />
+                  Суммы оплаты (₽) <span className="text-red-500">*</span>
                 </Label>
-                <Input
-                  id="amount"
-                  type="number"
-                  step="0.01"
-                  value={formData.amount}
-                  onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                  placeholder="Введите сумму в рублях"
-                  className="text-base"
-                  required
-                />
+                
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div>
+                    <Label htmlFor="amountCustoms" className="text-xs text-gray-600">Таможня</Label>
+                    <Input id="amountCustoms" type="number" value={formData.amountCustoms} onChange={(e) => setFormData({ ...formData, amountCustoms: e.target.value })} placeholder="0" className="mt-1" />
+                  </div>
+                  <div>
+                    <Label htmlFor="amountCar" className="text-xs text-gray-600">Авто</Label>
+                    <Input id="amountCar" type="number" value={formData.amountCar} onChange={(e) => setFormData({ ...formData, amountCar: e.target.value })} placeholder="0" className="mt-1" />
+                  </div>
+                  <div>
+                    <Label htmlFor="amountRecycling" className="text-xs text-gray-600">Утиль</Label>
+                    <Input id="amountRecycling" type="number" value={formData.amountRecycling} onChange={(e) => setFormData({ ...formData, amountRecycling: e.target.value })} placeholder="0" className="mt-1" />
+                  </div>
+                  <div>
+                    <Label htmlFor="amountFee" className="text-xs text-gray-600">Госпошлина</Label>
+                    <Input id="amountFee" type="number" value={formData.amountFee} onChange={(e) => setFormData({ ...formData, amountFee: e.target.value })} placeholder="0" className="mt-1" />
+                  </div>
+                  <div>
+                    <Label htmlFor="amountDeposit" className="text-xs text-gray-600">Залог</Label>
+                    <Input id="amountDeposit" type="number" value={formData.amountDeposit} onChange={(e) => setFormData({ ...formData, amountDeposit: e.target.value })} placeholder="0" className="mt-1" />
+                  </div>
+                  <div>
+                    <Label htmlFor="amountOther" className="text-xs text-gray-600">Прочее</Label>
+                    <Input id="amountOther" type="number" value={formData.amountOther} onChange={(e) => setFormData({ ...formData, amountOther: e.target.value })} placeholder="0" className="mt-1" />
+                  </div>
+                </div>
+                
+                <div className="pt-3 mt-3 border-t border-gray-200 flex justify-between items-center">
+                  <span className="text-sm font-semibold text-gray-700">Итого общая сумма:</span>
+                  <span className="text-lg font-bold text-green-600">
+                    {((Number(formData.amountCustoms) || 0) + 
+                      (Number(formData.amountCar) || 0) + 
+                      (Number(formData.amountRecycling) || 0) + 
+                      (Number(formData.amountFee) || 0) + 
+                      (Number(formData.amountDeposit) || 0) + 
+                      (Number(formData.amountOther) || 0)).toLocaleString('ru-RU')} ₽
+                  </span>
+                </div>
               </div>
             )}
 

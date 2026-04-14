@@ -106,18 +106,50 @@ export default function LeadStatusChanger({ lead, isOpen, onClose, onUpdate, ini
       return;
     }
 
+    // Определяем в какое поле записать введенную сумму
+    const amountFieldMap: Partial<Record<LeadStage, keyof Lead>> = {
+      payment_customs: 'amountCustoms',
+      payment_car: 'amountCar',
+      payment_recycling: 'amountRecycling',
+      payment_fee: 'amountFee',
+      payment_deposit: 'amountDeposit',
+      payment_other: 'amountOther'
+    };
+
+    const fieldToUpdate = amountFieldMap[newStage];
+    
     // Создаем обновленный лид
     const updatedLead: Lead = {
       ...lead,
       stage: newStage,
-      // Очищаем сумму для этапов без оплаты (Договор сделан, Дал реквизиты)
-      amount: ['contract_done', 'gave_requisites'].includes(newStage)
-        ? undefined
-        : (amount ? Number(amount) : lead.amount),
       lostReasonText: newStage === 'lost' ? lostReasonText : undefined,
       notes: notes.trim() || lead.notes,
       updatedAt: new Date().toISOString()
     };
+
+    // Очищаем общую сумму для этапов без оплаты (только если она была и мы на них вернулись)
+    if (['contract_done', 'gave_requisites'].includes(newStage)) {
+       updatedLead.amount = undefined;
+    } else {
+       // Если это этап оплаты, обновляем конкретное поле
+       if (fieldToUpdate) {
+          (updatedLead as any)[fieldToUpdate] = amount ? Number(amount) : undefined;
+       }
+       
+       // Пересчитываем общую сумму
+       const sum = (updatedLead.amountCustoms || 0) + 
+                   (updatedLead.amountCar || 0) + 
+                   (updatedLead.amountRecycling || 0) + 
+                   (updatedLead.amountFee || 0) + 
+                   (updatedLead.amountDeposit || 0) + 
+                   (updatedLead.amountOther || 0);
+                   
+       // Если сумма всех полей 0, но какое-то поле `amount` было (например, из старой версии), мы его сохраняем
+       // Иначе записываем новую сумму
+       if (sum > 0 || fieldToUpdate) {
+          updatedLead.amount = sum;
+       }
+    }
 
     onUpdate(updatedLead);
     onClose();
