@@ -207,7 +207,7 @@ export default function CRMLeadsTab() {
                         (numAmountRecycling || 0) + (numAmountFee || 0) + 
                         (numAmountDeposit || 0) + (numAmountOther || 0);
 
-    const needsAmount = formData.stage !== 'contract_done' && formData.stage !== 'gave_requisites';
+    const needsAmount = formData.stage !== 'contract_done' && formData.stage !== 'gave_requisites' && formData.stage !== 'lost';
     if (needsAmount && totalAmount === 0) {
       alert('Заполните хотя бы одну сумму оплаты');
       return;
@@ -774,12 +774,24 @@ export default function CRMLeadsTab() {
 
                     {/* Сумма - крупно и выделенно (только для этапов оплаты) */}
                     {lead.amount && !['contract_done', 'gave_requisites'].includes(lead.stage) ? (
-                      <div className="flex-shrink-0 text-right bg-gradient-to-r from-green-50 to-emerald-50 px-4 py-2 rounded-lg border border-green-200 min-w-[200px]">
-                        <div className="text-xs text-green-600 font-medium mb-1">Общая сумма</div>
-                        <div className="text-xl font-bold text-green-700">
+                      <div className={`flex-shrink-0 text-right px-4 py-2 rounded-lg border min-w-[200px] ${
+                        lead.stage === 'lost' 
+                          ? 'bg-gradient-to-r from-red-50 to-rose-50 border-red-200' 
+                          : 'bg-gradient-to-r from-green-50 to-emerald-50 border-green-200'
+                      }`}>
+                        <div className={`text-xs font-medium mb-1 ${
+                          lead.stage === 'lost' ? 'text-red-600' : 'text-green-600'
+                        }`}>
+                          {lead.stage === 'lost' ? 'Общая сумма (ПОТЕРЯНО)' : 'Общая сумма'}
+                        </div>
+                        <div className={`text-xl font-bold ${
+                          lead.stage === 'lost' ? 'text-red-700' : 'text-green-700'
+                        }`}>
                           {lead.amount.toLocaleString('ru-RU')} ₽
                         </div>
-                        <div className="mt-2 pt-2 border-t border-green-200/50 flex flex-wrap gap-x-3 gap-y-1 justify-end text-[10px] text-green-700 font-medium max-w-[250px]">
+                        <div className={`mt-2 pt-2 border-t flex flex-wrap gap-x-3 gap-y-1 justify-end text-[10px] font-medium max-w-[250px] ${
+                          lead.stage === 'lost' ? 'border-red-200/50 text-red-700' : 'border-green-200/50 text-green-700'
+                        }`}>
                           {lead.amountCustoms ? <span>Таможня: {lead.amountCustoms.toLocaleString('ru-RU')}₽</span> : null}
                           {lead.amountCar ? <span>Авто: {lead.amountCar.toLocaleString('ru-RU')}₽</span> : null}
                           {lead.amountRecycling ? <span>Утиль: {lead.amountRecycling.toLocaleString('ru-RU')}₽</span> : null}
@@ -789,9 +801,19 @@ export default function CRMLeadsTab() {
                         </div>
                       </div>
                     ) : !['contract_done', 'gave_requisites'].includes(lead.stage) ? (
-                      <div className="flex-shrink-0 text-right bg-gray-50 px-4 py-2 rounded-lg border border-gray-200">
-                        <div className="text-xs text-gray-500 font-medium mb-1">Общая сумма</div>
-                        <div className="text-sm text-gray-400">Не указана</div>
+                      <div className={`flex-shrink-0 text-right px-4 py-2 rounded-lg border ${
+                        lead.stage === 'lost' 
+                          ? 'bg-red-50 border-red-200' 
+                          : 'bg-gray-50 border-gray-200'
+                      }`}>
+                        <div className={`text-xs font-medium mb-1 ${
+                          lead.stage === 'lost' ? 'text-red-500' : 'text-gray-500'
+                        }`}>
+                          {lead.stage === 'lost' ? 'Общая сумма (ПОТЕРЯНО)' : 'Общая сумма'}
+                        </div>
+                        <div className={`text-sm ${
+                          lead.stage === 'lost' ? 'text-red-400' : 'text-gray-400'
+                        }`}>Не указана</div>
                       </div>
                     ) : null}
 
