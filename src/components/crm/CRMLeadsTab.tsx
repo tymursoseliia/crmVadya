@@ -89,7 +89,8 @@ export default function CRMLeadsTab() {
     amountFee: '',
     amountDeposit: '',
     amountOther: '',
-    notes: ''
+    notes: '',
+    isInstallment: false
   });
 
   // Фильтрация только своих лидов для сотрудника
@@ -117,6 +118,30 @@ export default function CRMLeadsTab() {
 
     visibleLeads.forEach(lead => {
       stats[lead.stage]++;
+    });
+
+    return stats;
+  }, [visibleLeads]);
+
+  // Статистика рассрочки по этапам
+  const installmentStats = useMemo(() => {
+    const stats: Record<LeadStage, number> = {
+      contract_done: 0,
+      gave_requisites: 0,
+      payment_customs: 0,
+      payment_car: 0,
+      payment_recycling: 0,
+      payment_fee: 0,
+      payment_deposit: 0,
+      payment_other: 0,
+      completed: 0,
+      lost: 0
+    };
+
+    visibleLeads.forEach(lead => {
+      if (lead.isInstallment && lead.stage !== 'lost') {
+        stats[lead.stage]++;
+      }
     });
 
     return stats;
@@ -227,6 +252,7 @@ export default function CRMLeadsTab() {
       serviceType: 'rastamozhka', // По умолчанию растаможка
       managerId: finalManagerId,
       teamId: teamId,
+      isInstallment: formData.isInstallment,
       amount: totalAmount > 0 ? totalAmount : undefined,
       amountCustoms: numAmountCustoms,
       amountCar: numAmountCar,
@@ -270,7 +296,8 @@ export default function CRMLeadsTab() {
       amountFee: '',
       amountDeposit: '',
       amountOther: '',
-      notes: ''
+      notes: '',
+      isInstallment: false
     });
     setShowForm(false);
   };
@@ -291,7 +318,8 @@ export default function CRMLeadsTab() {
       amountFee: lead.amountFee?.toString() || '',
       amountDeposit: lead.amountDeposit?.toString() || '',
       amountOther: lead.amountOther?.toString() || '',
-      notes: lead.notes || ''
+      notes: lead.notes || '',
+      isInstallment: lead.isInstallment || false
     });
     setShowForm(true);
   };
@@ -448,6 +476,11 @@ export default function CRMLeadsTab() {
                 </div>
                 <div className="text-right">
                   <p className="text-lg font-bold text-amber-700">{stageStats.payment_customs || 0}</p>
+                  {(stageStats.payment_customs || 0) > 0 && (
+                    <p className="text-[10px] text-amber-600 font-medium -mt-1 mb-1">
+                      Рассрочка: {installmentStats.payment_customs} | Без: {(stageStats.payment_customs || 0) - installmentStats.payment_customs}
+                    </p>
+                  )}
                   <p className="text-xs text-gray-500">
                     {leads.length > 0 ? ((stageStats.payment_customs || 0) / leads.length * 100).toFixed(0) : 0}%
                   </p>
@@ -462,6 +495,11 @@ export default function CRMLeadsTab() {
                 </div>
                 <div className="text-right">
                   <p className="text-lg font-bold text-green-700">{stageStats.payment_car || 0}</p>
+                  {(stageStats.payment_car || 0) > 0 && (
+                    <p className="text-[10px] text-green-600 font-medium -mt-1 mb-1">
+                      Рассрочка: {installmentStats.payment_car} | Без: {(stageStats.payment_car || 0) - installmentStats.payment_car}
+                    </p>
+                  )}
                   <p className="text-xs text-gray-500">
                     {leads.length > 0 ? ((stageStats.payment_car || 0) / leads.length * 100).toFixed(0) : 0}%
                   </p>
@@ -476,6 +514,11 @@ export default function CRMLeadsTab() {
                 </div>
                 <div className="text-right">
                   <p className="text-lg font-bold text-indigo-700">{stageStats.payment_recycling || 0}</p>
+                  {(stageStats.payment_recycling || 0) > 0 && (
+                    <p className="text-[10px] text-indigo-600 font-medium -mt-1 mb-1">
+                      Рассрочка: {installmentStats.payment_recycling} | Без: {(stageStats.payment_recycling || 0) - installmentStats.payment_recycling}
+                    </p>
+                  )}
                   <p className="text-xs text-gray-500">
                     {leads.length > 0 ? ((stageStats.payment_recycling || 0) / leads.length * 100).toFixed(0) : 0}%
                   </p>
@@ -490,6 +533,11 @@ export default function CRMLeadsTab() {
                 </div>
                 <div className="text-right">
                   <p className="text-lg font-bold text-pink-700">{stageStats.payment_fee || 0}</p>
+                  {(stageStats.payment_fee || 0) > 0 && (
+                    <p className="text-[10px] text-pink-600 font-medium -mt-1 mb-1">
+                      Рассрочка: {installmentStats.payment_fee} | Без: {(stageStats.payment_fee || 0) - installmentStats.payment_fee}
+                    </p>
+                  )}
                   <p className="text-xs text-gray-500">
                     {leads.length > 0 ? ((stageStats.payment_fee || 0) / leads.length * 100).toFixed(0) : 0}%
                   </p>
@@ -504,6 +552,11 @@ export default function CRMLeadsTab() {
                 </div>
                 <div className="text-right">
                   <p className="text-lg font-bold text-orange-700">{stageStats.payment_deposit || 0}</p>
+                  {(stageStats.payment_deposit || 0) > 0 && (
+                    <p className="text-[10px] text-orange-600 font-medium -mt-1 mb-1">
+                      Рассрочка: {installmentStats.payment_deposit} | Без: {(stageStats.payment_deposit || 0) - installmentStats.payment_deposit}
+                    </p>
+                  )}
                   <p className="text-xs text-gray-500">
                     {leads.length > 0 ? ((stageStats.payment_deposit || 0) / leads.length * 100).toFixed(0) : 0}%
                   </p>
@@ -518,6 +571,11 @@ export default function CRMLeadsTab() {
                 </div>
                 <div className="text-right">
                   <p className="text-lg font-bold text-cyan-700">{stageStats.payment_other || 0}</p>
+                  {(stageStats.payment_other || 0) > 0 && (
+                    <p className="text-[10px] text-cyan-600 font-medium -mt-1 mb-1">
+                      Рассрочка: {installmentStats.payment_other} | Без: {(stageStats.payment_other || 0) - installmentStats.payment_other}
+                    </p>
+                  )}
                   <p className="text-xs text-gray-500">
                     {leads.length > 0 ? ((stageStats.payment_other || 0) / leads.length * 100).toFixed(0) : 0}%
                   </p>
@@ -866,7 +924,8 @@ export default function CRMLeadsTab() {
             amountFee: '',
             amountDeposit: '',
             amountOther: '',
-            notes: ''
+            notes: '',
+            isInstallment: false
           });
         }
       }}>
@@ -1012,6 +1071,20 @@ export default function CRMLeadsTab() {
                   Выберите начальный статус для нового лида
                 </p>
               )}
+            </div>
+
+            {/* Рассрочка */}
+            <div className="flex items-center gap-2 bg-purple-50 p-3 rounded-lg border border-purple-100">
+              <input
+                type="checkbox"
+                id="isInstallment"
+                checked={formData.isInstallment}
+                onChange={(e) => setFormData({ ...formData, isInstallment: e.target.checked })}
+                className="w-5 h-5 text-purple-600 rounded border-purple-300 focus:ring-purple-500 cursor-pointer"
+              />
+              <Label htmlFor="isInstallment" className="text-sm font-semibold text-purple-900 cursor-pointer select-none">
+                Договор в рассрочку
+              </Label>
             </div>
 
             {/* Сумма оплаты - показываем для всех статусов кроме "Договор сделан" */}

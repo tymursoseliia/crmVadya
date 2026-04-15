@@ -58,6 +58,7 @@ export interface Lead {
   serviceType: ServiceType; // Тип услуги: растаможка или добив (обязательно)
   managerId: string;        // ID ответственного менеджера (обязательно)
   teamId: TeamName;         // Команда (определяется автоматически по менеджеру)
+  isInstallment?: boolean;  // В рассрочку или нет
   amount?: number;          // Сумма оплаты (общая сумма, автоматически вычисляется)
   amountCustoms?: number;   // Растаможка
   amountCar?: number;       // За авто
