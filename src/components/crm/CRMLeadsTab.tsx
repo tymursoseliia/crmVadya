@@ -90,6 +90,7 @@ export default function CRMLeadsTab() {
     amountDeposit: '',
     amountOther: '',
     notes: '',
+    lostReasonText: '',
     isInstallment: false
   });
 
@@ -238,6 +239,11 @@ export default function CRMLeadsTab() {
       return;
     }
 
+    if (formData.stage === 'lost' && !formData.lostReasonText?.trim() && !formData.notes?.trim()) {
+      alert('Укажите причину среза (в поле "Причина среза" или "Заметки")');
+      return;
+    }
+
     // Определяем команду по менеджеру
     const manager = employees.find(e => e.id === finalManagerId);
     const teamId = manager?.team || 'vady';
@@ -264,6 +270,7 @@ export default function CRMLeadsTab() {
       createdAt: editingLead?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       notes: formData.notes.trim() || undefined,
+      lostReasonText: formData.stage === 'lost' ? (formData.lostReasonText?.trim() || formData.notes?.trim() || undefined) : undefined,
       stageHistory: editingLead?.stageHistory || [{
         id: `hist-${Date.now()}`,
         timestamp: new Date().toISOString(),
@@ -297,6 +304,7 @@ export default function CRMLeadsTab() {
       amountDeposit: '',
       amountOther: '',
       notes: '',
+      lostReasonText: '',
       isInstallment: false
     });
     setShowForm(false);
@@ -319,6 +327,7 @@ export default function CRMLeadsTab() {
       amountDeposit: lead.amountDeposit?.toString() || '',
       amountOther: lead.amountOther?.toString() || '',
       notes: lead.notes || '',
+      lostReasonText: lead.lostReasonText || '',
       isInstallment: lead.isInstallment || false
     });
     setShowForm(true);
@@ -749,7 +758,7 @@ export default function CRMLeadsTab() {
                       </div>
 
                       {/* Причина потери для статуса "Потеряно" */}
-                      {lead.stage === 'lost' && lead.lostReasonText && (
+                      {lead.stage === 'lost' && (lead.lostReasonText || lead.notes) && (
                         <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded-lg">
                           <div className="flex items-start gap-2">
                             <AlertTriangle className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />
@@ -758,7 +767,7 @@ export default function CRMLeadsTab() {
                                 Причина среза:
                               </p>
                               <p className="text-xs text-red-600">
-                                {lead.lostReasonText}
+                                {lead.lostReasonText || lead.notes}
                               </p>
                             </div>
                           </div>
@@ -925,6 +934,7 @@ export default function CRMLeadsTab() {
             amountDeposit: '',
             amountOther: '',
             notes: '',
+            lostReasonText: '',
             isInstallment: false
           });
         }
@@ -1136,11 +1146,30 @@ export default function CRMLeadsTab() {
               </div>
             )}
 
+            {/* Причина потери (если "Потеряно") */}
+            {formData.stage === 'lost' && (
+              <div className="space-y-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <Label htmlFor="lostReasonText" className="text-sm font-semibold flex items-center gap-2 text-red-700">
+                  <AlertTriangle className="w-4 h-4" />
+                  Причина среза <span className="text-red-500">*</span>
+                </Label>
+                <Textarea
+                  id="lostReasonText"
+                  value={formData.lostReasonText}
+                  onChange={(e) => setFormData({ ...formData, lostReasonText: e.target.value })}
+                  placeholder="Опишите подробно почему лид потерян..."
+                  rows={2}
+                  className="text-base border-red-300 focus:ring-red-500 resize-none"
+                  required={formData.stage === 'lost'}
+                />
+              </div>
+            )}
+
             {/* Заметки */}
             <div className="space-y-2">
               <Label htmlFor="notes" className="text-sm font-semibold flex items-center gap-2">
                 <FileText className="w-4 h-4" />
-                Причина / Заметки
+                {formData.stage === 'lost' ? 'Доп. заметки' : 'Причина / Заметки'}
               </Label>
               <Textarea
                 id="notes"
