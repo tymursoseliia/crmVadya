@@ -76,6 +76,7 @@ export default function OperationsTableView({
             </th>
             <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700">Клоузер</th>
             <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700">Сумма RUB</th>
+            <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700">Курс</th>
             <th className="px-4 py-3 text-right">
               <button
                 onClick={() => onSort('amount')}
@@ -86,6 +87,10 @@ export default function OperationsTableView({
               </button>
             </th>
             <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700">Комиссия</th>
+            <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700">% Мен.</th>
+            <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700">ЗП Мен.</th>
+            <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700">% Клоуз.</th>
+            <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700">ЗП Клоуз.</th>
             {isAdmin && <th className="px-4 py-3 text-right text-xs font-semibold text-gray-700"></th>}
           </tr>
         </thead>
@@ -121,11 +126,26 @@ export default function OperationsTableView({
                 <td className="px-4 py-3 text-right text-sm font-medium text-gray-900">
                   {op.sumRub.toLocaleString()} ₽
                 </td>
+                <td className="px-4 py-3 text-right text-sm text-gray-600">
+                  {op.exchangeRate}
+                </td>
                 <td className="px-4 py-3 text-right text-sm font-bold text-green-600">
                   ${formatUSDT(op.usdtAfterCommission)}
                 </td>
                 <td className="px-4 py-3 text-right text-xs text-gray-500">
                   {op.dropCommission}%
+                </td>
+                <td className="px-4 py-3 text-right text-xs text-gray-600">
+                  {manager ? (op.type === 'растаможка' ? manager.percentRastamozhka : manager.percentDobiv) : 0}%
+                </td>
+                <td className="px-4 py-3 text-right text-sm font-medium text-blue-600">
+                  ${formatUSDT(op.managerEarning)}
+                </td>
+                <td className="px-4 py-3 text-right text-xs text-gray-600">
+                  {closer ? (op.type === 'растаможка' ? closer.percentRastamozhka : closer.percentDobiv) + '%' : '-'}
+                </td>
+                <td className="px-4 py-3 text-right text-sm font-medium text-purple-600">
+                  {op.closerEarning ? `$${formatUSDT(op.closerEarning)}` : '-'}
                 </td>
                 {isAdmin && (
                   <td className="px-4 py-3 text-right">
