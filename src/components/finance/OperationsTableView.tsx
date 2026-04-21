@@ -98,6 +98,13 @@ export default function OperationsTableView({
           {operations.map((op) => {
             const manager = employees.find(e => e.id === op.managerId);
             const closer = op.closerId ? employees.find(e => e.id === op.closerId) : null;
+            
+            const calcManagerPct = op.usdtAfterCommission > 0
+              ? parseFloat(((op.managerEarning / op.usdtAfterCommission) * 100).toFixed(2))
+              : 0;
+            const calcCloserPct = op.usdtAfterCommission > 0 && op.closerEarning
+              ? parseFloat(((op.closerEarning / op.usdtAfterCommission) * 100).toFixed(2))
+              : 0;
 
             return (
               <tr key={op.id} className="hover:bg-gray-50 transition-colors">
@@ -136,13 +143,13 @@ export default function OperationsTableView({
                   {op.dropCommission}%
                 </td>
                 <td className="px-4 py-3 text-right text-xs text-gray-600">
-                  {manager ? (op.type === 'растаможка' ? manager.percentRastamozhka : manager.percentDobiv) : 0}%
+                  {manager ? `${calcManagerPct}%` : '0%'}
                 </td>
                 <td className="px-4 py-3 text-right text-sm font-medium text-blue-600">
                   ${formatUSDT(op.managerEarning)}
                 </td>
                 <td className="px-4 py-3 text-right text-xs text-gray-600">
-                  {closer ? (op.type === 'растаможка' ? closer.percentRastamozhka : closer.percentDobiv) + '%' : '-'}
+                  {closer ? `${calcCloserPct}%` : '-'}
                 </td>
                 <td className="px-4 py-3 text-right text-sm font-medium text-purple-600">
                   {op.closerEarning ? `$${formatUSDT(op.closerEarning)}` : '-'}
