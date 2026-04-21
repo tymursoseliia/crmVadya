@@ -102,8 +102,10 @@ export default function OperationsTableView({
             const calcManagerPct = op.usdtAfterCommission > 0
               ? parseFloat(((op.managerEarning / op.usdtAfterCommission) * 100).toFixed(2))
               : 0;
-            const calcCloserPct = op.usdtAfterCommission > 0 && op.closerEarning
-              ? parseFloat(((op.closerEarning / op.usdtAfterCommission) * 100).toFixed(2))
+              
+            const closerEarningNum = op.closerEarning || 0;
+            const calcCloserPct = op.usdtAfterCommission > 0 && closerEarningNum > 0
+              ? parseFloat(((closerEarningNum / op.usdtAfterCommission) * 100).toFixed(2))
               : 0;
 
             return (
